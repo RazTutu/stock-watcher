@@ -1,31 +1,29 @@
-import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import { useStocks } from './hooks/useStocks';
-import SearchArea from './components/searchArea/SearchArea';
+import { useState } from "react";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import { useStocks } from "./hooks/useStocks";
+import SearchArea from "./components/searchArea/SearchArea";
 
-import './App.css'
+import "./App.css";
 
 type Stock = {
-  value: number,
-  date: string,
-}
+  value: number;
+  date: string;
+};
 
 function App() {
   const [chartData, setChartData] = useState<Stock[]>([]);
-  const stocks = useStocks('aapl');
-  console.log('stocks are', stocks);
   const updateChart = (data: Stock[]) => {
     setChartData(data);
-  }
+  };
 
   return (
-    <Container maxWidth="lg" sx={{ border: '1px solid red' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Container maxWidth="lg" sx={{ border: "1px solid red" }}>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
         <SearchArea updateChart={() => updateChart} />
       </Box>
     </Container>
-  )
+  );
 }
 
-export default App
+export default App;
