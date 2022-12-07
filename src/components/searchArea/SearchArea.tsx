@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { queryClient } from "../../main";
 import { useStocks } from "../../hooks/useStocks";
 
-export default function SearchArea({ updateChart }: () => void) {
+export default function SearchArea({ updateChart }) {
   const [fieldData, setFieldData] = useState("");
   const [companyName, setCompanyName] = useState("aapl");
   const { data: stocks } = useStocks(companyName);
-  console.log("stocks are", stocks);
+
+  useEffect(() => {
+    let stockList = [];
+    if (stocks?.data["Time Series (Daily)"]) {
+      stockList = Object.keys(stocks?.data["Time Series (Daily)"]).map(
+        (dateTime) => {
+          const value = stocks?.data["Time Series (Daily)"][dateTime];
+          const marketCloseKey = Object.keys(value)[3];
+          return {
+            date: dateTime,
+            value: value[marketCloseKey],
+          };
+        }
+      );
+      updateChart(stockList);
+    }
+  }, [stocks?.data]);
+
   const searchStock = (data: string) => {
     setCompanyName(fieldData);
   };

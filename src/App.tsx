@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { useStocks } from "./hooks/useStocks";
 import SearchArea from "./components/searchArea/SearchArea";
 
 import "./App.css";
@@ -20,7 +19,7 @@ function App() {
   return (
     <Container maxWidth="lg" sx={{ border: "1px solid red" }}>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <SearchArea updateChart={() => updateChart} />
+        <SearchArea updateChart={updateChart} />
       </Box>
     </Container>
   );
