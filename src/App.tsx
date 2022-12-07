@@ -1,14 +1,11 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+
 import SearchArea from "./components/searchArea/SearchArea";
-
+import { Stock } from "./types/types";
 import "./App.css";
-
-type Stock = {
-  value: number;
-  date: string;
-};
+import Chart from "./components/chart/Chart";
 
 function App() {
   const [chartData, setChartData] = useState<Stock[]>([]);
@@ -17,9 +14,12 @@ function App() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ border: "1px solid red" }}>
+    <Container maxWidth="lg">
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <SearchArea updateChart={updateChart} />
+      </Box>
+      <Box>
+        <Chart chartData={chartData} />
       </Box>
     </Container>
   );

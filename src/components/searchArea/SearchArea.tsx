@@ -4,10 +4,30 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useStocks } from "../../hooks/useStocks";
 
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+
 export default function SearchArea({ updateChart }) {
   const [fieldData, setFieldData] = useState("");
   const [companyName, setCompanyName] = useState("aapl");
   const { data: stocks } = useStocks(companyName);
+
+  const [fromDateValue, setFromDateValue] = React.useState<Dayjs | null>(
+    dayjs("2022-09-11T21:11:54")
+  );
+  const [toDateValue, setToDateValue] = React.useState<Dayjs | null>(
+    dayjs("2022-11-11T21:11:54")
+  );
+
+  const handleChangeFrom = (newValue: Dayjs | null) => {
+    setFromDateValue(newValue);
+  };
+
+  const handleChangeTo = (newValue: Dayjs | null) => {
+    setToDateValue(newValue);
+  };
 
   useEffect(() => {
     let stockList = [];
@@ -17,8 +37,8 @@ export default function SearchArea({ updateChart }) {
           const value = stocks?.data["Time Series (Daily)"][dateTime];
           const marketCloseKey = Object.keys(value)[3];
           return {
-            date: dateTime,
-            value: value[marketCloseKey],
+            name: dateTime,
+            uv: value[marketCloseKey],
           };
         }
       );
@@ -31,33 +51,52 @@ export default function SearchArea({ updateChart }) {
   };
 
   return (
-    <Box
-      sx={{
-        width: "80%",
-        marginTop: "3rem",
-        border: "1px solid red",
-        display: "flex",
-        justifyContent: "space-evenly",
-      }}
-    >
-      <TextField
-        variant="outlined"
-        sx={{ width: "20rem" }}
-        placeholder="Enter company symbol"
-        onChange={(event) => setFieldData(event.target.value)}
-      />
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => searchStock(fieldData)}
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Box
         sx={{
-          height: "3rem",
-          textTransform: "none",
-          fontSize: "1rem",
+          width: "80%",
+          marginTop: "3rem",
+          display: "flex",
+          justifyContent: "space-evenly",
         }}
       >
-        Search
-      </Button>
+        <TextField
+          variant="outlined"
+          sx={{ width: "20rem" }}
+          placeholder="Enter company symbol"
+          onChange={(event) => setFieldData(event.target.value)}
+        />
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => searchStock(fieldData)}
+          sx={{
+            height: "3rem",
+            textTransform: "none",
+            fontSize: "1rem",
+          }}
+        >
+          Search
+        </Button>
+      </Box>
+      <Box sx={{ marginTop: "2rem" }}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DesktopDatePicker
+            label="From"
+            inputFormat="MM/DD/YYYY"
+            value={fromDateValue}
+            onChange={handleChangeFrom}
+            renderInput={(params) => <TextField {...params} />}
+          />
+          <DesktopDatePicker
+            label="To"
+            inputFormat="MM/DD/YYYY"
+            value={toDateValue}
+            onChange={handleChangeTo}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
+      </Box>
     </Box>
   );
 }
